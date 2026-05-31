@@ -30,67 +30,71 @@ class DDDStructure extends Command
      */
     public function handle()
     {
-        $uri = base_path('src/'. $this->argument('context') .'/'. $this->argument('entity'));
+        $context = $this->argument('context');
+        $entity = $this->argument('entity');
+
+        $contextPascal = $this->pascalCase($context);
+        $entityPascal = $this->pascalCase($entity);
+
+        $uri = base_path('src/'. $contextPascal .'/'. $entityPascal);
         $this->info('Creating structure...');
 
-        File::makeDirectory($uri . '/domain', 0755, true, true);
-        $this->info($uri . '/domain');
+        $dirs = [
+            '/Domain',
+            '/Domain/Entities',
+            '/Domain/ValueObjects',
+            '/Domain/Contracts',
+            '/Application',
+            '/Infrastructure',
+            '/Infrastructure/Controllers',
+            '/Infrastructure/Routes',
+            '/Infrastructure/Validators',
+            '/Infrastructure/Repositories',
+            '/Infrastructure/Listeners',
+            '/Infrastructure/Events',
+        ];
 
-        File::makeDirectory($uri . '/domain/entities', 0755, true, true);
-        $this->info($uri . '/domain/entities');
+        foreach ($dirs as $d) {
+            File::makeDirectory($uri . $d, 0755, true, true);
+            $this->info($uri . $d);
+        }
 
-        File::makeDirectory($uri . '/domain/value_objects', 0755, true, true);
-        $this->info($uri . '/domain/value_objects');
+        // api.php (module routes entry)
+        $content = "<?php\n\n//use Src\\".$contextPascal."\\".$entityPascal."\\Infrastructure\\Controllers\\ExampleGETController;\n\n// Simple route example\n// Route::get('/', [ExampleGETController::class, 'index']);\n\n// Authenticated route example\n// Route::middleware(['auth:sanctum','activitylog'])->get('/', [ExampleGETController::class, 'index']);";
+        File::put($uri . '/Infrastructure/Routes/api.php', $content);
+        $this->info('Routes entry point added in ' . $uri . '/Infrastructure/Routes/api.php' );
 
-        File::makeDirectory($uri . '/domain/contracts', 0755, true, true);
-        $this->info($uri . '/domain/contracts');
-
-        File::makeDirectory($uri . '/application', 0755, true, true);
-        $this->info($uri . '/application');
-
-        File::makeDirectory($uri . '/infrastructure', 0755, true, true);
-        $this->info($uri . '/infrastructure');
-
-        File::makeDirectory($uri . '/infrastructure/controllers', 0755, true, true);
-        $this->info($uri . '/infrastructure/controllers');
-
-        File::makeDirectory($uri . '/infrastructure/routes', 0755, true, true);
-        $this->info($uri . '/infrastructure/routes');
-
-        File::makeDirectory($uri . '/infrastructure/validators', 0755, true, true);
-        $this->info($uri . '/infrastructure/validators');
-
-        File::makeDirectory($uri . '/infrastructure/repositories', 0755, true, true);
-        $this->info($uri . '/infrastructure/repositories');
-
-        File::makeDirectory($uri . '/infrastructure/listeners', 0755, true, true);
-        $this->info($uri . '/infrastructure/listeners');
-
-        File::makeDirectory($uri . '/infrastructure/events', 0755, true, true);
-        $this->info($uri . '/infrastructure/events');
-
-        // api.php
-        $content = "<?php\n\n//use Src\\".$this->argument('context')."\\".$this->argument('entity')."\\infrastructure\controllers\ExampleGETController;\n\n// Simpele route example\n// Route::get('/', [ExampleGETController::class, 'index']);\n\n//Authenticathed route example\n// Route::middleware(['auth:sanctum','activitylog'])->get('/', [ExampleGETController::class, 'index']);";
-        File::put($uri . '/infrastructure/routes/api.php', $content);
-        $this->info('Routes entry point added in ' . $uri . 'infrastructure/routes/api.php' );
-
-        // local api.php added to main api.php
-        $content = "\nRoute::prefix('" . $this->argument('context') . "_" .$this->argument('entity') . "')->group(base_path('src/". $this->argument('context') . "/" .$this->argument('entity') ."/infrastructure/routes/api.php'));\n";
-        File::append(base_path('routes/api.php'), $content);
+        // link local routes in main routes/api.php using original context/entity for prefix
+        $link = "\nRoute::prefix('" . $context . "_" . $entity . "')->group(base_path('src/" . $contextPascal . "/" . $entityPascal . "/infrastructure/routes/api.php'));\n";
+        $link = "\nRoute::prefix('" . $context . "_" . $entity . "')->group(base_path('src/" . $contextPascal . "/" . $entityPascal . "/Infrastructure/Routes/api.php'));\n";
+        File::append(base_path('routes/api.php'), $link);
         $this->info('Module routes linked in main routes directory.');
 
-        // ExampleGETController.php
-        $content = "<?php\n\nnamespace Src\\" . $this->argument('context')."\\".$this->argument('entity')."\\infrastructure\\controllers;\n\nuse App\\Http\\Controllers\\Controller;\n\nfinal class ExampleGETController extends Controller { \n\n public function index() { \n // TODO: DDD Controller content here \n }\n}";
-        File::put($uri.'/infrastructure/controllers/ExampleGETController.php', $content);
+        // Example controller
+        $controller = "<?php\n\nnamespace Src\\" . $contextPascal . "\\" . $entityPascal . "\\infrastructure\\controllers;\n\nuse App\\Http\\Controllers\\Controller;\n\nfinal class ExampleGETController extends Controller { \n\n public function index() { \n // TODO: DDD Controller content here \n }\n}";
+        $controller = "<?php\n\nnamespace Src\\" . $contextPascal . "\\" . $entityPascal . "\\Infrastructure\\Controllers;\n\nuse App\\Http\\Controllers\\Controller;\n\nfinal class ExampleGETController extends Controller { \n\n public function index() { \n // TODO: DDD Controller content here \n }\n}";
+        File::put($uri . '/Infrastructure/Controllers/ExampleGETController.php', $controller);
         $this->info('Example controller added');
 
-        // ExampleValidatorRequest.php
-        $content = "<?php\n\nnamespace Src\\".$this->argument('context')."\\".$this->argument('entity')."\\infrastructure\\validators;\n\nuse Illuminate\Foundation\Http\FormRequest;\n\nclass ExampleValidatorRequest extends FormRequest\n{\npublic function authorize()\n{\nreturn true;\n}\n\npublic function rules()\n{\nreturn [\n'field' => 'nullable|max:255'\n];\n}\n\n}";
-        File::put($uri.'/infrastructure/validators/ExampleValidatorRequest.php', $content);
+        // Example validator
+        $validator = "<?php\n\nnamespace Src\\" . $contextPascal . "\\" . $entityPascal . "\\infrastructure\\validators;\n\nuse Illuminate\\Foundation\\Http\\FormRequest;\n\nclass ExampleValidatorRequest extends FormRequest\n{\n    public function authorize()\n    {\n        return true;\n    }\n\n    public function rules()\n    {\n        return [\n            'field' => 'nullable|max:255'\n        ];\n    }\n\n}";
+        $validator = "<?php\n\nnamespace Src\\" . $contextPascal . "\\" . $entityPascal . "\\Infrastructure\\Validators;\n\nuse Illuminate\\Foundation\\Http\\FormRequest;\n\nclass ExampleValidatorRequest extends FormRequest\n{\n    public function authorize()\n    {\n        return true;\n    }\n\n    public function rules()\n    {\n        return [\n            'field' => 'nullable|max:255'\n        ];\n    }\n\n}";
+        File::put($uri . '/Infrastructure/Validators/ExampleValidatorRequest.php', $validator);
         $this->info('Example validation request added');
 
-        $this->info('Structure ' . $this->argument('entity') . ' DDD successfully created.');
+        $this->info('Structure ' . $entity . ' DDD successfully created.');
 
         return Command::SUCCESS;
+    }
+
+    private function pascalCase(string $value): string
+    {
+        $value = preg_replace('/[^a-zA-Z0-9]+/', ' ', $value);
+        $words = preg_split('/\s+/', trim($value));
+        $words = array_map(function ($w) {
+            return ucfirst(strtolower($w));
+        }, $words ?: []);
+
+        return implode('', $words);
     }
 }
