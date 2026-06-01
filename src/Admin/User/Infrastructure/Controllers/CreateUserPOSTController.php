@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\admin\user\infrastructure\controllers;
+namespace Src\Admin\User\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
 use Src\admin\user\application\CreateUserUseCase;
@@ -23,7 +23,8 @@ final class CreateUserPOSTController extends Controller
         $createUserUseCase->__invoke(
             $request->id,
             $request->username,
-            $request->email
+            $request->email,
+            $request->password ?? null
         );
 
         return response()->json([

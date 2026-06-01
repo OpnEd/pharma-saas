@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\admin\user\infrastructure\controllers;
+namespace Src\Admin\User\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
 use Src\admin\user\application\GetUserByIdUseCase;

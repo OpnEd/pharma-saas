@@ -18,6 +18,9 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Src\Admin\User\Infrastructure\UserPlugin;
+use Filament\Navigation\NavigationGroup;
+use Filament\Support\Icons\Heroicon;
 
 class AdministradorPanelProvider extends PanelProvider
 {
@@ -54,6 +57,15 @@ class AdministradorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([ // Aquí conectamos los módulos a Filament:
+                UserPlugin::make(),
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('RH-Administracion')
+                    ->icon('heroicon-o-building-storefront')
+                    ->collapsed(false),
             ]);
     }
 }

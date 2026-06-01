@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\admin\user\domain\value_objects;
+namespace Src\Admin\User\Domain\ValueObjects;
 
 
 class UserName {

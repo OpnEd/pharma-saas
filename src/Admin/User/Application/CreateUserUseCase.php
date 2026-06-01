@@ -1,10 +1,12 @@
 <?php
 
-namespace Src\admin\user\application;
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
-use Src\admin\user\domain\entities\User;
-use Src\admin\user\domain\value_objects\UserEmail;
-use Src\admin\user\domain\value_objects\UserName;
+namespace Src\Admin\User\Application;
+
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
+use Src\Admin\User\Domain\Entities\User;
+use Src\Admin\User\Domain\ValueObjects\UserEmail;
+use Src\Admin\User\Domain\ValueObjects\UserName;
+use Src\Admin\User\Domain\ValueObjects\UserPassword;
 
 class CreateUserUseCase
 {
@@ -15,11 +17,18 @@ class CreateUserUseCase
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke(int $id, string $name, string $email): void
+    public function __invoke(int $id, string $name, string $email, ?string $password = null): void
     {
         $nameValueObject = new UserName($name);
         $emailValueObject = new UserEmail($email);
-        $user = new User($id, $nameValueObject, $emailValueObject);
+        $passwordValueObject = $password !== null ? new UserPassword($password) : null;
+
+        $user = new User(
+            $id,
+            $nameValueObject,
+            $emailValueObject,
+            $passwordValueObject
+        );
 
         $this->userRepository->save($user);
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Src\admin\user\application;
+namespace Src\Admin\User\Application;
 
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
-use Src\admin\user\domain\entities\User;
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
+use Src\Admin\User\Domain\Entities\User;
 
 
 class GetUserByIdUseCase

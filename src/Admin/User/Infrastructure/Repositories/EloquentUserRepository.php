@@ -12,12 +12,17 @@
  * separación de responsabilidades y la independencia de la
  * infraestructura.
  */
-namespace Src\admin\user\infrastructure\repositories;
+namespace Src\Admin\User\Infrastructure\Repositories;
 
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
-use Src\admin\user\domain\entities\User;
-use Src\admin\user\domain\value_objects\UserName;
-use Src\admin\user\domain\value_objects\UserEmail;
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
+use Src\Admin\User\Domain\Entities\User;
+use Src\Admin\User\Domain\ValueObjects\UserName;
+use Src\Admin\User\Domain\ValueObjects\UserEmail;
+use Src\Admin\User\Domain\ValueObjects\UserPassword;
+use Src\Admin\User\Domain\ValueObjects\UserEmailVerifiedAt;
+use Src\Admin\User\Domain\ValueObjects\UserRememberToken;
+use Src\Admin\User\Domain\ValueObjects\UserCreatedAt;
+use Src\Admin\User\Domain\ValueObjects\UserUpdatedAt;
 use App\Models\User as EloquentUser;
 
 class EloquentUserRepository implements UserRepositoryInterface
@@ -36,18 +41,37 @@ class EloquentUserRepository implements UserRepositoryInterface
         return new User(
             $user->id,
             new UserName($user->name),
-            new UserEmail($user->email)
+            new UserEmail($user->email),
+            $user->password ? new UserPassword($user->password) : null,
+            $user->email_verified_at ? new UserEmailVerifiedAt($user->email_verified_at) : null,
+            $user->remember_token ? new UserRememberToken($user->remember_token) : null,
+            $user->created_at ? new UserCreatedAt($user->created_at) : null,
+            $user->updated_at ? new UserUpdatedAt($user->updated_at) : null
         );
     }
 
     public function save(User $user): void
     {
+        $attributes = [
+            'name' => $user->name()->value(),
+            'email' => $user->email()->value(),
+        ];
+
+        if ($user->password() !== null) {
+            $attributes['password'] = $user->password()->value();
+        }
+
+        if ($user->emailVerifiedAt() !== null) {
+            $attributes['email_verified_at'] = $user->emailVerifiedAt()->value()->format('Y-m-d H:i:s');
+        }
+
+        if ($user->rememberToken() !== null) {
+            $attributes['remember_token'] = $user->rememberToken()->value();
+        }
+
         EloquentUser::updateOrCreate(
             ['id' => $user->id()],
-            [
-                'name' => $user->name()->value(),
-                'email' => $user->email()->value()
-            ]
+            $attributes
         );
     }
 
@@ -59,7 +83,12 @@ class EloquentUserRepository implements UserRepositoryInterface
             return new User(
                 $model->id,
                 new UserName($model->name),
-                new UserEmail($model->email)
+                new UserEmail($model->email),
+                $model->password ? new UserPassword($model->password) : null,
+                $model->email_verified_at ? new UserEmailVerifiedAt($model->email_verified_at) : null,
+                $model->remember_token ? new UserRememberToken($model->remember_token) : null,
+                $model->created_at ? new UserCreatedAt($model->created_at) : null,
+                $model->updated_at ? new UserUpdatedAt($model->updated_at) : null
             );
         })->all();
     }
