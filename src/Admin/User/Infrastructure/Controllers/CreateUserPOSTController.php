@@ -3,9 +3,9 @@
 namespace Src\Admin\User\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
-use Src\admin\user\application\CreateUserUseCase;
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
-use Src\admin\user\infrastructure\validators\CreateUserRequest;
+use Src\Admin\User\Application\CreateUserUseCase;
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
+use Src\Admin\User\Infrastructure\Validators\CreateUserRequest;
 
 final class CreateUserPOSTController extends Controller
 {
@@ -21,8 +21,7 @@ final class CreateUserPOSTController extends Controller
         $createUserUseCase = new CreateUserUseCase($this->userRepository);
 
         $createUserUseCase->__invoke(
-            $request->id,
-            $request->username,
+            $request->name,
             $request->email,
             $request->password ?? null
         );

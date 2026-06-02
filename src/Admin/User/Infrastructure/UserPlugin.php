@@ -17,9 +17,9 @@ class UserPlugin implements Plugin
         // El módulo se encarga de descubrir SUS PROPIOS recursos y páginas.
         // Usamos __DIR__ para que la ruta sea relativa a donde vive este archivo.
         $panel
-            ->discoverResources(in: __DIR__ . '/Filament', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Resources')
-            ->discoverPages(in: __DIR__ . '/Filament', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Pages')
-            ->discoverWidgets(in: __DIR__ . '/Filament', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Widgets');
+            ->discoverResources(in: __DIR__ . '/Filament/Resources', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Resources')
+            ->discoverPages(in: __DIR__ . '/Filament/Resources', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Resources')
+            ->discoverWidgets(in: __DIR__ . '/Filament/Widgets', for: 'Src\\Admin\\User\\Infrastructure\\Filament\\Widgets');
     }
 
     public function boot(Panel $panel): void

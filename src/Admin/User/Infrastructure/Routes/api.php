@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Src\admin\user\infrastructure\controllers\CreateUserPOSTController;
-use Src\admin\user\infrastructure\controllers\GetUserByIdGETController;
+use Src\Admin\User\Infrastructure\Controllers\CreateUserPOSTController;
+use Src\Admin\User\Infrastructure\Controllers\GetUserByIdGETController;
 
 // Simpele route example
 Route::get('/{id}', [GetUserByIdGETController::class, 'index']);

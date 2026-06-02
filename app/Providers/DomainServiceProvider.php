@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Application as LaravelApplication;
 
 class DomainServiceProvider extends ServiceProvider
 {
@@ -29,5 +31,10 @@ class DomainServiceProvider extends ServiceProvider
             base_path('src/Admin/User/Infrastructure/Persistence/Migrations'),
             // ... añade el resto de rutas de migraciones
         ]);
+
+        if (! ($this->app instanceof LaravelApplication) || ! $this->app->routesAreCached()) {
+            Route::prefix('api/admin/users')
+                ->group(base_path('src/Admin/User/Infrastructure/Routes/api.php'));
+        }
     }
 }

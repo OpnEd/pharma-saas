@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use Src\admin\user\application\CreateUserUseCase;
-use Src\admin\user\application\GetUserByIdUseCase;
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
-use Src\admin\user\domain\entities\User;
-use Src\admin\user\domain\value_objects\UserEmail;
-use Src\admin\user\domain\value_objects\UserName;
+use Src\Admin\User\Application\CreateUserUseCase;
+use Src\Admin\User\Application\GetUserByIdUseCase;
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
+use Src\Admin\User\Domain\Entities\User;
+use Src\Admin\User\Domain\ValueObjects\UserEmail;
+use Src\Admin\User\Domain\ValueObjects\UserName;
 use Tests\TestCase;
 
 class AdminUserUseCasesTest extends TestCase
@@ -24,7 +24,7 @@ class AdminUserUseCasesTest extends TestCase
             }));
 
         $useCase = new CreateUserUseCase($repository);
-        $useCase->__invoke(123, 'alice', 'alice@example.com');
+        $useCase->__invoke('alice', 'alice@example.com');
     }
 
     public function test_get_user_by_id_use_case_returns_user_from_repository(): void

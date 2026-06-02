@@ -17,14 +17,14 @@ class CreateUserUseCase
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke(int $id, string $name, string $email, ?string $password = null): void
+    public function __invoke(string $name, string $email, ?string $password = null): void
     {
         $nameValueObject = new UserName($name);
         $emailValueObject = new UserEmail($email);
         $passwordValueObject = $password !== null ? new UserPassword($password) : null;
 
         $user = new User(
-            $id,
+            null,
             $nameValueObject,
             $emailValueObject,
             $passwordValueObject

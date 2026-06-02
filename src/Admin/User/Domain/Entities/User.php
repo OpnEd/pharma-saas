@@ -12,7 +12,7 @@ use Src\Admin\User\Domain\ValueObjects\UserUpdatedAt;
 
 class User
 {
-    private int $id;
+    private ?int $id;
     private UserName $username;
     private UserEmail $email;
     private ?UserPassword $password;
@@ -22,7 +22,7 @@ class User
     private ?UserUpdatedAt $updatedAt;
 
     public function __construct(
-        int $id,
+        ?int $id,
         UserName $username,
         UserEmail $email,
         ?UserPassword $password = null,
@@ -41,7 +41,7 @@ class User
         $this->updatedAt = $updatedAt;
     }
 
-    public function id(): int
+    public function id(): ?int
     {
         return $this->id;
     }

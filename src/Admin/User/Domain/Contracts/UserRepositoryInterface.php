@@ -12,9 +12,9 @@
  * o incluso almacenamiento en memoria, siempre y cuando cumplan
  *  con el contrato definido por esta interfaz.
  */
-namespace Src\admin\user\domain\contracts;
+namespace Src\Admin\User\Domain\Contracts;
 
-use Src\admin\user\domain\entities\User;
+use Src\Admin\User\Domain\Entities\User;
 
 interface UserRepositoryInterface
 {

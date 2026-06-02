@@ -69,6 +69,12 @@ class EloquentUserRepository implements UserRepositoryInterface
             $attributes['remember_token'] = $user->rememberToken()->value();
         }
 
+        if ($user->id() === null) {
+            EloquentUser::create($attributes);
+
+            return;
+        }
+
         EloquentUser::updateOrCreate(
             ['id' => $user->id()],
             $attributes

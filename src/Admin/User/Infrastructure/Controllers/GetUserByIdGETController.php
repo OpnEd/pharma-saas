@@ -3,8 +3,8 @@
 namespace Src\Admin\User\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
-use Src\admin\user\application\GetUserByIdUseCase;
-use Src\admin\user\domain\contracts\UserRepositoryInterface;
+use Src\Admin\User\Application\GetUserByIdUseCase;
+use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
 
 final class GetUserByIdGETController extends Controller
 {
@@ -32,7 +32,7 @@ final class GetUserByIdGETController extends Controller
             'status' => true,
             'data' => [
                 'id' => $user->id(),
-                'username' => $user->name()->value(),
+                'name' => $user->name()->value(),
                 'email' => $user->email()->value()
             ],
             'message' => 'User retrieved successfully'
