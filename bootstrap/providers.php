@@ -2,6 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    App\Providers\DomainServiceProvider::class,
+    Src\Admin\User\Infrastructure\Providers\DomainServiceProvider::class,
     App\Providers\Filament\AdministradorPanelProvider::class,
 ];

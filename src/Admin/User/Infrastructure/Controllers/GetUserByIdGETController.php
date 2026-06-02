@@ -3,7 +3,7 @@
 namespace Src\Admin\User\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
-use Src\Admin\User\Application\GetUserByIdUseCase;
+use Src\Admin\User\Application\UseCases\GetUserByIdUseCase;
 use Src\Admin\User\Domain\Contracts\UserRepositoryInterface;
 
 final class GetUserByIdGETController extends Controller

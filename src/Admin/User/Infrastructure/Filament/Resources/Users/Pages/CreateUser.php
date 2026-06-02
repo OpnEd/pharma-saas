@@ -6,8 +6,8 @@ use Filament\Resources\Pages\CreateRecord;
 use Src\Admin\User\Infrastructure\Filament\Resources\Users\UserResource;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Src\Admin\User\Application\CreateUserUseCase;
-use Src\Admin\User\Application\CreateUserCommand;
+use Src\Admin\User\Application\UseCases\CreateUserUseCase;
+use Src\Admin\User\Application\Commands\CreateUserCommand;
 
 class CreateUser extends CreateRecord
 {
@@ -28,11 +28,7 @@ class CreateUser extends CreateRecord
         // El Caso de Uso instanciará la Entidad pura de Dominio y la pasará al Repositorio
         $useCase = app(CreateUserUseCase::class);
 
-        $useCase->__invoke(
-            $command->name,
-            $command->email,
-            $command->password,
-        );
+        $useCase->__invoke($command);
 
         // 3. El Compromiso con Filament:
         // Como Filament exige que devolvamos un Modelo de Eloquent para 

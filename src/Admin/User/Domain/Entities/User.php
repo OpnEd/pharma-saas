@@ -80,4 +80,11 @@ class User
     {
         return $this->updatedAt;
     }
+
+    public function updateProfile(string $name, UserEmail $email): void
+    {
+        $this->username = new UserName($name);
+        $this->email = $email;
+        $this->updatedAt = new UserUpdatedAt(new \DateTimeImmutable());
+    }
 }

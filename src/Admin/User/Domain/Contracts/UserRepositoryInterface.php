@@ -18,7 +18,7 @@ use Src\Admin\User\Domain\Entities\User;
 
 interface UserRepositoryInterface
 {
-    public function save(User $user): void;
+    public function save(User $user): User;
     public function find(int $id): ?User;
     public function findAll(): array;
     public function delete(int $id): void;

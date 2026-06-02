@@ -50,7 +50,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         );
     }
 
-    public function save(User $user): void
+    public function save(User $user): User
     {
         $attributes = [
             'name' => $user->name()->value(),
@@ -70,14 +70,34 @@ class EloquentUserRepository implements UserRepositoryInterface
         }
 
         if ($user->id() === null) {
-            EloquentUser::create($attributes);
+            $model = EloquentUser::create($attributes);
 
-            return;
+            return new User(
+                $model->id,
+                new UserName($model->name),
+                new UserEmail($model->email),
+                $model->password ? new UserPassword($model->password) : null,
+                $model->email_verified_at ? new UserEmailVerifiedAt($model->email_verified_at) : null,
+                $model->remember_token ? new UserRememberToken($model->remember_token) : null,
+                $model->created_at ? new UserCreatedAt($model->created_at) : null,
+                $model->updated_at ? new UserUpdatedAt($model->updated_at) : null
+            );
         }
 
-        EloquentUser::updateOrCreate(
+        $model = EloquentUser::updateOrCreate(
             ['id' => $user->id()],
             $attributes
+        );
+
+        return new User(
+            $model->id,
+            new UserName($model->name),
+            new UserEmail($model->email),
+            $model->password ? new UserPassword($model->password) : null,
+            $model->email_verified_at ? new UserEmailVerifiedAt($model->email_verified_at) : null,
+            $model->remember_token ? new UserRememberToken($model->remember_token) : null,
+            $model->created_at ? new UserCreatedAt($model->created_at) : null,
+            $model->updated_at ? new UserUpdatedAt($model->updated_at) : null
         );
     }
 
